@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1075777843787",
+    "firebase_url": "https://eatwithme-83faf.firebaseio.com",
+    "project_id": "eatwithme-83faf",
+    "storage_bucket": "eatwithme-83faf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075777843787:android:de545909c0d657570493ce",
+        "android_client_info": {
+          "package_name": "com.eatwithme.toori"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075777843787-ru7kon1mi7q25nj157drdomq1916o8p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALhfpQ_dDBRne3aWGYKUTW8wLkMdu6Eh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075777843787-ru7kon1mi7q25nj157drdomq1916o8p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
