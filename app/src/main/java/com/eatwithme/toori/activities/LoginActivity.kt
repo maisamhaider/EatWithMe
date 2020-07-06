@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity() {
 
         //setting chat tab layout as chat activity ToolBar
         setSupportActionBar(loginAct_Toolbar)
-        supportActionBar!!.title = "Register" //!! not-null assertion..(!!)converts any value to a non-null type and throws an exception if the value is null
+        supportActionBar!!.title = "Login" //!! not-null assertion..(!!)converts any value to a non-null type and throws an exception if the value is null
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         loginAct_Toolbar.setNavigationOnClickListener()
         {
