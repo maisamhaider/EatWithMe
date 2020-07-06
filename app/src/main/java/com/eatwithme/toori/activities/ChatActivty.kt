@@ -27,8 +27,7 @@ class ChatActivty : AppCompatActivity() {
         supportActionBar!!.title = "" //setting no value if user name in not set //!! not-null assertion..(!!)converts any value to a non-null type and throws an exception if the value is null
 
         //set fragments in ViewPagerAdapter
-        val fragmentManager = supportFragmentManager
-        val viewPagerAdapter = ChatViewPagerAdapter(fragmentManager)
+        val viewPagerAdapter = ChatViewPagerAdapter(supportFragmentManager)
         viewPagerAdapter.setFragmentAndTitle(ChatListFragment(),"Chat")
         viewPagerAdapter.setFragmentAndTitle(ChatSearchFragment(),"Search")
         viewPagerAdapter.setFragmentAndTitle(ChatSettingsFragment(),"Settings")
@@ -50,7 +49,6 @@ class ChatActivty : AppCompatActivity() {
             return fragments[position]
         }
 
-
         override fun getCount(): Int {
             return fragments.size
         }
@@ -61,8 +59,8 @@ class ChatActivty : AppCompatActivity() {
             fragmentTitle.add(title)
         }
 
-        override fun getPageTitle(pstion: Int): CharSequence? {
-            return super.getPageTitle(pstion)
+        override fun getPageTitle(i: Int): CharSequence? {
+            return fragmentTitle[i]
         }
     }
 }
