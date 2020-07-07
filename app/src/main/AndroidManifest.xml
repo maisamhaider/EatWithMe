@@ -4,6 +4,8 @@
     package="com.eatwithme.toori">
 
     <application
+
+        android:name=".classes.MultiDexApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activities.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +24,8 @@
         <activity android:name=".activities.RegistrationActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.ChatActivty" />
-        <activity android:name=".activities.EatWithMeMainActivity"></activity>
+        <activity android:name=".activities.EatWithMeMainActivity"/>
+
     </application>
 
 </manifest>
