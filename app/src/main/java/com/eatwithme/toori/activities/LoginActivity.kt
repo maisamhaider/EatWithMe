@@ -72,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(){task ->
                         if (task.isSuccessful)
                         {
-
+                            // if successful ❤ then go to EatWithMe Main activity
                             val intent = Intent(this@LoginActivity,EatWithMeMainActivity::class.java)
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
@@ -80,6 +80,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                         else
                         {
+                            // error 😈👿👹👺💀☠👻👽👾🤖💩
                            Toast.makeText(this@LoginActivity,"error"+task.exception!!.message,Toast.LENGTH_LONG).show()
                         }
                     }

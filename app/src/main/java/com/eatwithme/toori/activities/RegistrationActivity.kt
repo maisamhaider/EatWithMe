@@ -109,14 +109,19 @@ class RegistrationActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 //if user created Successful. take the current user id and store id in firebase database
                                 firebaseUserId = refFirebaseAuth.currentUser!!.uid
-                                refUserDatabaseReference = FirebaseDatabase.getInstance().reference.child(
-                                    MyAnnotation.USER).child(firebaseUserId)
+                                //we need refUserDatabaseReference for updating user some info in firebase database
+                                refUserDatabaseReference =
+                                    FirebaseDatabase.getInstance().reference.child(
+                                        MyAnnotation.USER
+                                    ).child(firebaseUserId)
 
                                 val userHashMap = HashMap<String, Any>()
                                 userHashMap["uid"] = firebaseUserId
                                 userHashMap["username"] = userName
-                                userHashMap["profile"] = "https://firebasestorage.googleapis.com/v0/b/eatwithme-83faf.appspot.com/o/ic_user.png?alt=media&token=7d90385f-feb0-4b8a-b49e-40c301936471"
-                                userHashMap["cover"] = "https://firebasestorage.googleapis.com/v0/b/eatwithme-83faf.appspot.com/o/ic_test_cover.png?alt=media&token=8e17d7e5-b195-46a3-a631-a76adf58c9e5"
+                                userHashMap["profile"] =
+                                    "https://firebasestorage.googleapis.com/v0/b/eatwithme-83faf.appspot.com/o/ic_user.png?alt=media&token=7d90385f-feb0-4b8a-b49e-40c301936471"
+                                userHashMap["cover"] =
+                                    "https://firebasestorage.googleapis.com/v0/b/eatwithme-83faf.appspot.com/o/ic_test_cover.png?alt=media&token=8e17d7e5-b195-46a3-a631-a76adf58c9e5"
                                 userHashMap["status"] = "offline"
                                 userHashMap["search"] = userName.toLowerCase()
                                 userHashMap["facebook"] = "http://m.facebook.com"
@@ -124,23 +129,29 @@ class RegistrationActivity : AppCompatActivity() {
                                 userHashMap["website"] = "http://www.google.com"
 
                                 refUserDatabaseReference.updateChildren(userHashMap)
-                                    .addOnCompleteListener(){task ->
-                                        if (task.isSuccessful)
-                                        {
-                                            val intent = Intent(this@RegistrationActivity,EatWithMeMainActivity::class.java)
+                                    .addOnCompleteListener() { task ->
+                                        if (task.isSuccessful) {
+                                            //if Successful ❤ go to EatWithMe Main activity
+                                            val intent = Intent(
+                                                this@RegistrationActivity,
+                                                EatWithMeMainActivity::class.java
+                                            )
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                             startActivity(intent)
                                             finish()
-                                        }
-                                        else
-                                        {
-                                            Toast.makeText(this@RegistrationActivity,"error"+task.exception!!.message,Toast.LENGTH_LONG).show()
+                                        } else {
+                                            Toast.makeText(
+                                                //😒 error
+                                                this@RegistrationActivity,
+                                                "error" + task.exception!!.message,
+                                                Toast.LENGTH_LONG
+                                            ).show()
                                         }
                                     }
 
 
                             } else {
-                                //if some error accured during creating user
+                                //if some error 😈👿👹👺💀☠👻👽👾🤖💩 occurred during creating user
                                 val toast: Toast = Toast.makeText(
                                     this@RegistrationActivity,
                                     "Error Message" + task.exception!!.message,

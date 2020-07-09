@@ -24,10 +24,10 @@
                 android:id="@+id/chat_user_profile_CIV"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginEnd="5dp"
-                android:src="@mipmap/ic_launcher" />
+                android:layout_marginEnd="5dp" />
 
             <TextView
+
                 android:id="@+id/chat_user_name_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorColor="@android:color/white"
-            app:tabBackground="@color/colorPrimaryDark"
-            app:tabTextColor="@color/colorPrimary"
+            app:tabBackground="@color/colorPrimary"
+            app:tabTextColor="@android:color/white"
             app:tabSelectedTextColor="@android:color/white">
 
         </com.google.android.material.tabs.TabLayout>

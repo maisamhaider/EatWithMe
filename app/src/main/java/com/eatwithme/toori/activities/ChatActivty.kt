@@ -7,13 +7,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.eatwithme.toori.MyAnnotation
 import com.eatwithme.toori.R
 import com.eatwithme.toori.fragments.ChatListFragment
 import com.eatwithme.toori.fragments.ChatSearchFragment
 import com.eatwithme.toori.fragments.ChatSettingsFragment
+import com.eatwithme.toori.models.UserModel
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_chat_activty.*
 
 class ChatActivty : AppCompatActivity() {
+
+    var userDatabaseReference: DatabaseReference? = null
+    var firebaseUser: FirebaseUser? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_activty)
@@ -34,6 +45,9 @@ class ChatActivty : AppCompatActivity() {
 
         chat_VP.adapter = viewPagerAdapter
         chat_TL.setupWithViewPager(chat_VP)
+
+// set user appbar small icon and user name
+        userSmallNameAndProfile()
     }
     internal class ChatViewPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager,FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT){
 
@@ -62,5 +76,33 @@ class ChatActivty : AppCompatActivity() {
         override fun getPageTitle(i: Int): CharSequence? {
             return fragmentTitle[i]
         }
+    }
+
+   private fun  userSmallNameAndProfile()
+    {
+        firebaseUser = FirebaseAuth.getInstance().currentUser
+      userDatabaseReference = FirebaseDatabase.getInstance().reference.child(MyAnnotation.USER).child(firebaseUser!!.uid)
+
+        // retrieve and display user profile👩‍👨 and name ..
+        userDatabaseReference!!.addValueEventListener(object : ValueEventListener
+        {
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists())
+                {
+                    val user: UserModel? = snapshot.getValue(UserModel::class.java)
+                    chat_user_name_TV.text = user!!.username
+                    Picasso.get().load(user!!.profile).placeholder(R.drawable.ic_user).into(chat_user_profile_CIV)
+                }
+            }
+
+
+        })
+
+
+
     }
 }
