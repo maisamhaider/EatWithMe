@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.eatwithme.toori.MyAnnotation
+import com.eatwithme.toori.annotations.MyAnnotation
 import com.eatwithme.toori.R
 import com.eatwithme.toori.fragments.ChatListFragment
 import com.eatwithme.toori.fragments.ChatSearchFragment
@@ -94,8 +94,11 @@ class ChatActivty : AppCompatActivity() {
                 if (snapshot.exists())
                 {
                     val user: UserModel? = snapshot.getValue(UserModel::class.java)
-                    chat_user_name_TV.text = user!!.username
-                    Picasso.get().load(user!!.profile).placeholder(R.drawable.ic_user).into(chat_user_profile_CIV)
+                    chat_user_name_small_TV.text = user!!.username
+                    Picasso.get()
+                        .load(user!!.profile)
+                        .placeholder(R.drawable.ic_user)
+                        .into(chat_user_profile_CIV)
                 }
             }
 

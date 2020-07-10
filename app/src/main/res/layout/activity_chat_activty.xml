@@ -23,12 +23,13 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/chat_user_profile_CIV"
                 android:layout_width="35dp"
+                android:src="@drawable/ic_user"
                 android:layout_height="35dp"
                 android:layout_marginEnd="5dp" />
 
             <TextView
 
-                android:id="@+id/chat_user_name_TV"
+                android:id="@+id/chat_user_name_small_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username"
