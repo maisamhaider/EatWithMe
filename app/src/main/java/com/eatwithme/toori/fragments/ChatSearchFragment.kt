@@ -91,7 +91,6 @@ class ChatSearchFragment : Fragment() {
                             (userModelList as ArrayList<UserModel>).add(user)
                         }
                     }
-                    var size = userModelList!!.size
                     chatUsersAdaper = ChatUsersAdaper(context!!,userModelList!!,false)
                     chatSearch_rv!!.adapter = chatUsersAdaper
                 }
