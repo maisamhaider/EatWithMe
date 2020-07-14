@@ -1,7 +1,9 @@
 package com.eatwithme.toori.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,7 +12,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.eatwithme.toori.R
 import com.eatwithme.toori.annotations.MyAnnotation
 import com.eatwithme.toori.models.UserModel
@@ -82,8 +86,82 @@ class ChatSettingsFragment : Fragment() {
             isProfilePic = true
             pickImage()
         }
-
+        view.chatFacebookLink_tv.setOnClickListener()
+        {
+            setSocialLinks(MyAnnotation.FACEBOOK)
+        }
+        view.chatInstagramLink_tv.setOnClickListener()
+        {
+            setSocialLinks(MyAnnotation.INSTAGRAM)
+        }
+        view.chatWebsiteLink_tv.setOnClickListener()
+        {
+            setSocialLinks(MyAnnotation.WEBSITE)
+        }
         return view
+    }
+
+    private fun setSocialLinks(socialLinkType: String) {
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context!!)
+        if (socialLinkType.equals(MyAnnotation.WEBSITE)) {
+            builder.setTitle("Write you website Url")
+        }
+        else
+            {
+                builder.setTitle("Write you name")
+            }
+        val editText = EditText(context!!)
+        if (socialLinkType.equals(MyAnnotation.WEBSITE)) {
+            editText.setHint("e.g www.google.com")
+        }
+        else
+        {
+            editText.setHint("username")
+        }
+        builder.setView(editText)
+        builder.setPositiveButton("create", DialogInterface.OnClickListener { dialog, i ->
+
+            var socialLinkString: String = editText.text.toString()
+            if (socialLinkString != "")
+            {
+                saveSocialLink(socialLinkString,socialLinkType)
+            }
+        }).setNegativeButton("cancel", DialogInterface.OnClickListener { dialog, i ->
+           dialog.cancel()
+        })
+        builder.show()
+    }
+
+    private fun saveSocialLink(socialLinkName: String,socialLinkType: String) {
+
+        val socialLinkHashMap = HashMap<String, Any>()
+
+        when(socialLinkType)
+        {
+            MyAnnotation.FACEBOOK ->
+            {
+                socialLinkHashMap[MyAnnotation.FACEBOOK] = "http://m.${MyAnnotation.FACEBOOK}.com/$socialLinkName"
+            }
+            MyAnnotation.INSTAGRAM ->
+            {
+                socialLinkHashMap[MyAnnotation.FACEBOOK] = "http://m.${MyAnnotation.INSTAGRAM}.com/$socialLinkName"
+            }
+            MyAnnotation.WEBSITE ->
+            {
+                socialLinkHashMap[MyAnnotation.FACEBOOK] = "http://$socialLinkName"
+            }
+
+        }
+        userDatabaseReference!!.updateChildren(socialLinkHashMap).addOnCompleteListener{
+            task ->
+            if (task.isSuccessful)
+            {
+                val toast: Toast = Toast.makeText(context!!,"uploaded Successfully ",Toast.LENGTH_LONG)
+                toast.show()
+            }
+        }
+
     }
 
     private fun pickImage() {
@@ -107,19 +185,26 @@ class ChatSettingsFragment : Fragment() {
         }
     }
 
+
     private fun uploadProfile(isProfile: Boolean) {
 
         val progressBar = ProgressDialog(context)
-        progressBar.setMessage("")
+        progressBar.setMessage("image is uploading")
+        progressBar.show()
 
         if (isProfile) {
             storageReference = FirebaseStorage
                 .getInstance()
                 .reference
-                .child(MyAnnotation.USER_PROFILE_IMAGES)
+                .child(MyAnnotation.USER_PROFILE_IMAGES)//USER_PROFILE_IMAGES'
+            // value is folder name that will be created for keeping profile images
 
             val fileReference =
-                storageReference!!.child(System.currentTimeMillis().toString() + ".jpg")
+                storageReference!!.child(
+                    System.currentTimeMillis().toString() + ".jpg"
+                )// to make a unique
+            // name of each profile picture. we have to give time in milliseconds as name + .jpg
+
 
             var uploadTask: StorageTask<*>
             uploadTask = fileReference.putFile(profileImageUri!!)
@@ -145,10 +230,14 @@ class ChatSettingsFragment : Fragment() {
             storageReference = FirebaseStorage
                 .getInstance()
                 .reference
-                .child(MyAnnotation.USER_COVER_IMAGES)
+                .child(MyAnnotation.USER_COVER_IMAGES)//USER_COVER_IMAGES'
+            // value is folder name that will be created for keeping cover images
 
             val fileReference =
-                storageReference!!.child(System.currentTimeMillis().toString() + ".jpg")
+                storageReference!!.child(
+                    System.currentTimeMillis().toString() + ".jpg"
+                )// to make a unique
+            // name of each profile picture. we have to give time in milliseconds as name + .jpg
 
             var uploadTask: StorageTask<*>
             uploadTask = fileReference.putFile(coverImageUri!!)
