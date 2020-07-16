@@ -1,11 +1,17 @@
 package com.eatwithme.toori.annotations;
 
 public @interface MyAnnotation {
-
     String USER = "user";
+    String ID = "id";
+    String CHAT = "chat";
+    String CHAT_LIST = "chat_list";
+
+    //folders name in firebase database
     String USER_PROFILE_IMAGES = "user profile images";
     String USER_COVER_IMAGES = "user cover images";
+    String CHAT_IMAGES = "chat images";
 
+    //
     String UID = "uid";
     String USER_NAME = "username";
     String PROFILE = "profile";
@@ -15,6 +21,16 @@ public @interface MyAnnotation {
     String FACEBOOK = "facebook";
     String INSTAGRAM = "instagram";
     String WEBSITE = "website";
+
+    String TARGET_USER_ID = "Target_User_Id";
+    String SENDER_ID = "sender_id";
+    String MESSAGE = "message";
+    String RECEIVER_ID = "receiver_id";
+    String IS_SEEN = "is_seen";
+    String MESSAGE_IMAGE_URL = "message_image_url";
+    String MESSAGE_KEY = "message_key";
+
+    int REQ_CODE_1ST = 1001 ;
 
 
 

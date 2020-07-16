@@ -255,6 +255,7 @@ class ChatSettingsFragment : Fragment() {
                     val profileHashMap = HashMap<String, Any>()
                     profileHashMap[MyAnnotation.COVER] = uri
                     userDatabaseReference!!.updateChildren(profileHashMap)
+                    progressBar.cancel()
 
                 }
             }
