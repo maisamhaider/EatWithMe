@@ -45,6 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/messaging_ABL">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messages_RV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/constraintLayout"

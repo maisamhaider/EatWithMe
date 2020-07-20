@@ -7,8 +7,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.eatwithme.toori.R
+import com.eatwithme.toori.adapters.MessagingAdapter
 import com.eatwithme.toori.annotations.MyAnnotation
+import com.eatwithme.toori.models.MessageModel
 import com.eatwithme.toori.models.UserModel
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
@@ -24,19 +28,30 @@ import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_messaging.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class MessagingActivity : AppCompatActivity() {
     private var targetUserId: String? = null
     private var senderFirebaseUser: FirebaseUser? = null
-
+    private var messagingAdapter: MessagingAdapter? = null
+    private var messageList: List<MessageModel>? = null
+    private lateinit var messages_RV: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messaging)
 
+        messages_RV = findViewById(R.id.messages_RV)
+        var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(applicationContext)
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        linearLayoutManager.stackFromEnd = true
+        messages_RV.layoutManager = linearLayoutManager
+
         intent = intent
-        targetUserId = intent.getStringExtra(MyAnnotation.TARGET_USER_ID)
+        targetUserId = intent.getStringExtra(MyAnnotation.RECEIVER_ID)
         senderFirebaseUser = FirebaseAuth.getInstance().currentUser
+
+        //firebase realtime database reference
         val firebaseDatabaseReference = FirebaseDatabase.getInstance()
             .reference.child(MyAnnotation.USER).child(targetUserId!!)
 
@@ -47,7 +62,8 @@ class MessagingActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user: UserModel? = snapshot.getValue(UserModel::class.java)
                 messaging_user_name_small_TV.text = user!!.username
-                Picasso.get().load(user!!.profile).into(messaging_user_profile_CIV)
+                Picasso.get().load(user.profile).into(messaging_user_profile_CIV)
+                retrieveMessages(senderFirebaseUser!!.uid, targetUserId!!, user.profile)
 
             }
 
@@ -82,6 +98,43 @@ class MessagingActivity : AppCompatActivity() {
         }
     }
 
+    private fun retrieveMessages(senderUid: String, targetUser: String, imageUri: String) {
+
+        messageList = ArrayList()
+
+        val ref = FirebaseDatabase.getInstance().reference.child(MyAnnotation.CHAT)
+        ref.addValueEventListener(object : ValueEventListener
+        {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                (messageList as ArrayList<MessageModel>).clear()
+                for (p0 in snapshot.children) {
+                    val message = p0.getValue(MessageModel::class.java)
+
+                    if (message!!.receiver_id.equals(senderUid)
+                        && message!!.sender_id.equals(targetUser)
+                        ||
+                        message!!.receiver_id.equals(targetUser)
+                        && message!!.sender_id.equals(senderUid))
+                    {
+
+                        (messageList as ArrayList<MessageModel>).add(message)
+
+                    }
+                    messagingAdapter = MessagingAdapter(this@MessagingActivity,messageList!!,imageUri)
+                    messages_RV.adapter = messagingAdapter
+
+
+                }
+            }
+
+        })
+
+    }
+
     private fun sendMessageToBeloved(
         message: String,
         senderFirebaseUserID: String,
@@ -94,6 +147,7 @@ class MessagingActivity : AppCompatActivity() {
         messageHashMap[MyAnnotation.SENDER_ID] = senderFirebaseUserID
         messageHashMap[MyAnnotation.MESSAGE] = message
         messageHashMap[MyAnnotation.RECEIVER_ID] = targetUser_Id
+        messageHashMap[MyAnnotation.MESSAGE_TYPE] = MyAnnotation.TEXT
         messageHashMap[MyAnnotation.IS_SEEN] = false
         messageHashMap[MyAnnotation.MESSAGE_IMAGE_URL] = ""
         messageHashMap[MyAnnotation.MESSAGE_KEY] = messageUniqueKey
@@ -115,7 +169,7 @@ class MessagingActivity : AppCompatActivity() {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             if (!snapshot.exists()) {
                                 chatListSenderRef.child(MyAnnotation.ID)
-                                    .setValue(senderFirebaseUser!!.uid)
+                                    .setValue(targetUser_Id)
                             }
 
                             val chatListReceiverRef =
@@ -148,11 +202,14 @@ class MessagingActivity : AppCompatActivity() {
             progressBar.show()
 
             val chatImageUri = data.data
+            //
             val firebaseStorage =
                 FirebaseStorage.getInstance().reference.child(MyAnnotation.CHAT_IMAGES)
             val reference = FirebaseDatabase.getInstance().reference
-            val chatImageMsgKey = reference.push().key
-            val chatImagesMsgPath = firebaseStorage.child("$chatImageMsgKey.jpg")
+            val chatImageMsgKey =
+                reference.push().key// creating unique key 😖 for chat image message
+            val chatImagesMsgPath =
+                firebaseStorage.child("$chatImageMsgKey.jpg")//saving message image with name as (unique key .jpg)
 
             var uploadTask: StorageTask<*>
             uploadTask = chatImagesMsgPath.putFile(chatImageUri!!)
@@ -166,13 +223,14 @@ class MessagingActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
 
                     val downloadedUrl = task.result
-                    val uri = downloadedUrl.toString()
+                    val url = downloadedUrl.toString()
                     val imageMessageHashMap = HashMap<String, Any?>()
                     imageMessageHashMap[MyAnnotation.SENDER_ID] = senderFirebaseUser!!.uid
-                    imageMessageHashMap[MyAnnotation.MESSAGE] = "Sent you an image"
+                    imageMessageHashMap[MyAnnotation.MESSAGE] = ""
                     imageMessageHashMap[MyAnnotation.RECEIVER_ID] = targetUserId
+                    imageMessageHashMap[MyAnnotation.MESSAGE_TYPE] = MyAnnotation.IMAGE
                     imageMessageHashMap[MyAnnotation.IS_SEEN] = false
-                    imageMessageHashMap[MyAnnotation.MESSAGE_IMAGE_URL] = uri
+                    imageMessageHashMap[MyAnnotation.MESSAGE_IMAGE_URL] = url
                     imageMessageHashMap[MyAnnotation.MESSAGE_KEY] = chatImageMsgKey
 
                     reference.child(MyAnnotation.CHAT).child(chatImageMsgKey!!)

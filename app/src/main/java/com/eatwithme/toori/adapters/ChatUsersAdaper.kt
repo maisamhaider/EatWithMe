@@ -70,7 +70,7 @@ class ChatUsersAdaper(
                 if (which== 0)
                 {
                     val intent : Intent = Intent(context,MessagingActivity::class.java)
-                    intent.putExtra(MyAnnotation.TARGET_USER_ID, user.uid)
+                    intent.putExtra(MyAnnotation.RECEIVER_ID, user.uid)
                     context.startActivity(intent)
 
                 }else{

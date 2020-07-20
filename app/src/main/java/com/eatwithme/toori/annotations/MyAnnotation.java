@@ -22,13 +22,16 @@ public @interface MyAnnotation {
     String INSTAGRAM = "instagram";
     String WEBSITE = "website";
 
-    String TARGET_USER_ID = "Target_User_Id";
     String SENDER_ID = "sender_id";
     String MESSAGE = "message";
     String RECEIVER_ID = "receiver_id";
     String IS_SEEN = "is_seen";
     String MESSAGE_IMAGE_URL = "message_image_url";
     String MESSAGE_KEY = "message_key";
+    String MESSAGE_TYPE = "message_type";
+
+    String IMAGE = "text";
+    String TEXT = "image";
 
     int REQ_CODE_1ST = 1001 ;
 
